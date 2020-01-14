@@ -1,0 +1,32 @@
+﻿@page "/"
+
+<h1>Hello, world!</h1>
+
+number of users: @Users.Count()
+<button @onclick="@(async () => await Add())">click me. I work if you use Sqlite</button>
+<ul>
+@foreach(var user in Users) 
+{
+    <li>@user.UserName</li>
+}
+</ul>
+
+    
+
+
+
+@code {
+    [Inject] UserManager<IdentityUser> UserManager { get; set; }
+
+    IQueryable<IdentityUser> Users;
+
+    protected override void OnInitialized()
+    {
+        Users = UserManager.Users;
+    }
+
+    public async Task Add()
+    {
+        await UserManager.CreateAsync(new IdentityUser { UserName = $"test_{Guid.NewGuid().ToString()}" });
+    }
+}
